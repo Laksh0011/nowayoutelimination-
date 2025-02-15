@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No Way Out Elimination</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .player-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .player {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            padding: 15px;
+            margin: 10px auto;
+            background-color: darkred;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px red;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 1s ease-out;
+        }
+
+        .player:hover {
+            transform: scale(1.1);
+        }
+
+        .eliminated {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .blood-effect {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/3/3f/Blood_splatter.svg');
+            background-size: cover;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .logo {
+            width: 200px;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            margin: 20px 0;
+        }
+
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://wallpapercave.com/wp/wp10998870.jpg') no-repeat center center/cover;
+            z-index: -1;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-container"></div>
+    <img class="logo" src="https://i.imgur.com/N8vDkwg.png" alt="No Way Out Logo">
+    <h1>No Way Out Elimination</h1>
+    
+    <div class="controls">
+        <input type="text" id="playerName" placeholder="Enter Player Name">
+        <button onclick="addPlayer()">Add Player</button>
+    </div>
+
+    <div class="container">
+        <ul class="player-list" id="playerList"></ul>
+    </div>
+
+    <audio id="gunshot" src="https://www.fesliyanstudios.com/play-mp3/4385"></audio>
+    
+    <script>
+        function addPlayer() {
+            const playerName = document.getElementById('playerName').value.trim();
+            if (playerName === '') return;
+            
+            const playerList = document.getElementById('playerList');
+            const player = document.createElement('li');
+            player.classList.add('player');
+            player.textContent = playerName;
+            player.onclick = function() { eliminatePlayer(this); };
+            playerList.appendChild(player);
+            
+            document.getElementById('playerName').value = '';
+        }
+
+        function eliminatePlayer(player) {
+            let blood = document.createElement('div');
+            blood.classList.add('blood-effect');
+            player.appendChild(blood);
+            blood.style.opacity = 1;
+            document.getElementById('gunshot').play();
+            
+            setTimeout(() => {
+                player.classList.add('eliminated');
+                setTimeout(() => player.remove(), 1000);
+            }, 500);
+        }
+    </script>
+</body>
+</html>
